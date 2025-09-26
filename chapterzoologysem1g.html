@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Portal</title>
+  <script src="https://unpkg.com/@supabase/supabase-js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 10px; }
+    h2 { text-align: center; }
+    .chapter-card { 
+      background: #f4f4f4; padding: 12px; margin: 10px 0; 
+      border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    h3 { margin: 0; }
+    p { margin: 5px 0; }
+    a { display: inline-block; margin: 3px 0; color: teal; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    img { max-width: 100%; border-radius: 6px; margin-top: 5px; }
+  </style>
+</head>
+<body>
+  <h2>📊 Admin Portal</h2>
+
+  <div id="allChapters"></div>
+
+  <script>
+    // Supabase Config
+    const supabaseUrl = "https://krkzmfmvouvznzibakmj.supabase.co";
+    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtya3ptZm12b3V2em56aWJha21qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTgwODgzNjYsImV4cCI6MjA3MzY2NDM2Nn0.dp73hy1rh7ulLm0m90_KgweZ1I-PRAizQsV_S8O-vec";
+    const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+    // Fetch all chapters
+    async function fetchAllChapters() {
+      const { data, error } = await supabase
+        .from("chapters")
+        .select("*")
+        .order("chapter_number", { ascending: true });
+
+      const container = document.getElementById("allChapters");
+      container.innerHTML = "";
+
+      if (error) {
+        container.innerHTML = `<p style="color:red">${error.message}</p>`;
+        return;
+      }
+
+      data.forEach(ch => {
+        const div = document.createElement("div");
+        div.className = "chapter-card";
+        div.innerHTML = `
+          <h3>${ch.chapter_number}. ${ch.chapter_title}</h3>
+          <p><b>Teacher ID:</b> ${ch.teacher_id}</p>
+          ${ch.notes_link ? `<p>📄 <a href="${ch.notes_link}" target="_blank">View Notes</a></p>` : ""}
+          ${ch.video_link ? `<p>🎥 <a href="${ch.video_link}" target="_blank">Video</a></p>` : ""}
+          ${ch.meet_link ? `<p>📅 <a href="${ch.meet_link}" target="_blank">Meet Link</a></p>` : ""}
+          ${ch.photo_url ? `<img src="${ch.photo_url}" alt="Photo">` : ""}
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    fetchAllChapters();
+  </script>
+</body>
+</html>
