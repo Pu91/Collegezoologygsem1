@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Teacher Register</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #4facfe, #00f2fe);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      width: 100%;
+      max-width: 350px;
+      text-align: center;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    input {
+      width: 90%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      outline: none;
+      font-size: 14px;
+    }
+
+    input:focus {
+      border-color: #4facfe;
+      box-shadow: 0 0 5px rgba(79, 172, 254, 0.6);
+    }
+
+    button {
+      background: #4facfe;
+      border: none;
+      color: white;
+      padding: 12px;
+      border-radius: 8px;
+      width: 100%;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background: #00c6ff;
+    }
+
+    p {
+      margin-top: 15px;
+      font-size: 14px;
+    }
+
+    a {
+      color: #4facfe;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Teacher Register</h2>
+    <form id="registerForm">
+      <input type="email" id="email" placeholder="Enter Email" required><br>
+      <input type="password" id="password" placeholder="Enter Password" required><br>
+      <button type="submit">Register</button>
+    </form>
+    <p>Already have an account? <a href="/school managment system data/index.html">Login</a></p>
+  </div>
+
+  <script type="module">
+   
+    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+const SUPABASE_URL = "https://krkzmfmvouvznzibakmj.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtya3ptZm12b3V2em56aWJha21qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTgwODgzNjYsImV4cCI6MjA3MzY2NDM2Nn0.dp73hy1rh7ulLm0m90_KgweZ1I-PRAizQsV_S8O-vec";
+
+export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+
+    const form = document.getElementById("registerForm");
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+      });
+
+      if (error) {
+        alert("Error: " + error.message);
+      } else {
+        alert("✅ Registration successful! Check your email for verification.");
+        window.location.href = "/school managment system data/index.html";
+      }
+    });
+  </script>
+</body>
+</html>
