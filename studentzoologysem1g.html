@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Panel</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://unpkg.com/@supabase/supabase-js"></script>
+  <style>
+    body {
+  font-family: Arial, sans-serif;
+  background: #f4f6f8;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 600px;
+  margin: auto;
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  margin-top: 40px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+h1 {
+  text-align: center;
+  color: #333;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+input, button {
+  padding: 12px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+button {
+  background: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #0056b3;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+table th, table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+}
+
+table th {
+  background: #007bff;
+  color: white;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .container {
+    width: 90%;
+    padding: 15px;
+  }
+  table th, table td {
+    font-size: 14px;
+    padding: 8px;
+  }
+}
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Admin Panel</h1>
+    <form id="studentForm">
+      <input type="text" id="name" placeholder="Student Name" required>
+      <input type="text" id="college" placeholder="College" required>
+      <input type="text" id="course" placeholder="Course" required>
+      <button type="submit">Add Student</button>
+    </form>
+    <p id="message"></p>
+  </div>
+
+  <script>
+    const SUPABASE_URL = "https://krkzmfmvouvznzibakmj.supabase.co"; 
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtya3ptZm12b3V2em56aWJha21qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTgwODgzNjYsImV4cCI6MjA3MzY2NDM2Nn0.dp73hy1rh7ulLm0m90_KgweZ1I-PRAizQsV_S8O-vec"; 
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    const form = document.getElementById("studentForm");
+    const message = document.getElementById("message");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const name = document.getElementById("name").value;
+      const college = document.getElementById("college").value;
+      const course = document.getElementById("course").value;
+
+      const { data, error } = await supabase
+        .from("students")
+        .insert([{ name, college, course }]);
+
+      if (error) {
+        message.textContent = "❌ Error: " + error.message;
+        console.error(error);
+      } else {
+        message.textContent = "✅ Student Added Successfully!";
+        form.reset();
+      }
+    });
+  </script>
+</body>
+</html>
